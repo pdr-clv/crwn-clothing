@@ -13,6 +13,34 @@ const config = {
   measurementId: "G-6NMMPF19ST"
 };
 
+export const createUserProfileDocument = async (userAuth,additionalData) => {
+// si el usuario no está logeado o sign ineado, return, y no se sigue ejecutando nada mas.
+  if (!userAuth) return;
+// se le pasa el valor userAuth.uid como valor del documento, para ver si exite ese userRef, y se comprobará si existe ese uid en la colección users,  
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  
+  const snapShot= await userRef.get();
+// snapShot tiene datos, y existe la propiedad exists, se ejecutará el códdigo que hay dentro del if.
+  if (!snapShot.exists) {
+    const {displayName, email} = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData
+      })
+    } catch (err) {
+      console.error('error creando usuario',err.message);
+    }
+  }
+
+  return userRef;
+
+}
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
