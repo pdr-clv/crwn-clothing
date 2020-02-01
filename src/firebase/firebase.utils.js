@@ -20,7 +20,7 @@ export const createUserProfileDocument = async (userAuth,additionalData) => {
   const userRef = firestore.doc(`users/${userAuth.uid}`);
   
   const snapShot= await userRef.get();
-// snapShot tiene datos, y existe la propiedad exists, se ejecutará el códdigo que hay dentro del if.
+// snapShot tiene datos, y existe la propiedad exists es falso, se ejecutará el códdigo que hay dentro del if.
   if (!snapShot.exists) {
     const {displayName, email} = userAuth;
     const createdAt = new Date();
