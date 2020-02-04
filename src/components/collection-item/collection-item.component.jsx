@@ -1,8 +1,13 @@
 import React from 'react';
+import CustomButton from '../custom-button/custom-button.component';
+import { connect } from 'react-redux';
+import { addItem } from '../../redux/cart/cart.actions';
 
 import './collection-item.styles.scss';
 
-const CollectionItem = ({id, name, price, imageUrl}) => (
+const CollectionItem = ({item, addItem}) => {
+	const { name, price, imageUrl } = item;
+	return (
 	<div className='collection-item'>
 		<div className='image' 
 			style={{
@@ -13,8 +18,13 @@ const CollectionItem = ({id, name, price, imageUrl}) => (
 			<div className='name'>{name}</div>
 			<div className='price'>{price}</div>
 		</div>
+		<CustomButton onClick={()=>addItem(item)} inverted>Add to cart</CustomButton>
 
   </div>
-);
+)};
 
-export default CollectionItem;
+const mapDispatchToProps = dispatch =>({
+	addItem:item => dispatch(addItem(item))
+});
+//ahora podemos utilizar la función addItem para enviar el item en el payload al estado cart.
+export default connect(null,mapDispatchToProps)(CollectionItem);

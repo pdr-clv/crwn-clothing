@@ -4,13 +4,33 @@
     flex-direction: column;
     height: 350px;
     align-items: center;
-  
+    position: relative;
+//se pone position relative, para que cuando se posicione absolute el custom-button, lo podamos poner dentro de la imagen del collection-item
     .image {
       width: 100%;
       height: 95%;
       background-size: cover;
       background-position: center;
       margin-bottom: 5px;
+    }
+// custom-button tiene la clase definida en el CustomButton, pero puede acceder con este selector a los estilos desde este archivo de estilos.
+    .custom-button{
+      width: 80%;
+      opacity:0.7;
+      position: absolute;
+      top:255px;
+      display: none;
+// por defecto el boton de Add to cart está oculto con display-none y al hacer hover, se mostrará
+    }
+
+    &:hover {
+      .image {
+        opacity:0.8;
+      }
+      .custom-button{
+        //al darle display flex, se hace visible
+        display:flex;
+      }
     }
   
     .collection-footer {
