@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { toggleCartHidden } from '../../redux/cart/cart.actions';
 import { ReactComponent as ShoppingIcon} from '../../assets/shopping-bag.svg';
 import { selectCartItemsCount } from '../../redux/cart/cart.selectors';
+import { createStructuredSelector } from 'reselect';
 
 import './cart-icon.styles.scss';
 
@@ -17,8 +18,8 @@ const CartIcon = ({toggleCartHidden , itemCount}) => (
 
 //se utiliza el selector selectCartItemsCount, definido en cart.selectors.js en la carpeta de redux/cart.
 //la forma primitiva sería valida, pero al hacer cualquier modificación en el state, en algúna propiedad que ni siquiera tiene que ver con cart, volvería a renderizar el componente, y sería innecesario.
-const mapStateToProps = state =>({
-  itemCount: selectCartItemsCount(state)
+const mapStateToProps = createStructuredSelector({
+  itemCount: selectCartItemsCount
 });
 
 const mapDispatchToProps = dispatch => ({

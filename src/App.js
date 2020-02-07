@@ -4,9 +4,14 @@ import { Route,Switch,Redirect } from 'react-router-dom';
 //El componente Redirect vale para hacer redirect si se cumple alguna condición en la ruta de la url.
 import { connect } from 'react-redux';
 
+import { createStructuredSelector } from 'reselect';
+import { selectCurrentUser } from './redux/user/user.selectors'; 
+
 // Route permite que se pueda hacer paginacion e ir a los /algo.
 //Switch se encarga de que en cuanto coincida una, ya no busque mas /algo
 import HomePage from './pages/homepage/homepage.component';
+
+import CheckoutPage from './pages/checkout/checkout.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
@@ -70,16 +75,18 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
           <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to ='/'/>) : (<SignInAndSignUpPage />)} />
         </Switch>
       </div>
     );
   }
 }
+// el path de shop no se pone exact, porque eventualmente se pasará parametros al url /shop/idproducto.
 //render dentro de Route te permite renderizar la página SigInAndSignOut si se cumple una condición del currentUser es null
 //cuando llamamos a mapStateToProps, disgregamos user del state. al ser App componente de clase, para utilizar el valor currentUser, hay que hacer this.props.currentUser
-const mapStateToProps = ({ user }) => ({
-	currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector({
+	currentUser: selectCurrentUser
 });
 
 // podemos pasar el valor currentUser que está guardado en el root-reducer o el store del state. Lo podemos utilizar haciendo this.props.currentUser

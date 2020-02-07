@@ -9,7 +9,7 @@ const selectCart = state => state.cart;
 // el segndo valor es una función en la que se encuentra el valor que queremos buscar en dicha colección pasada en el primer argumento
 export const selectCartItems = createSelector(
   [selectCart],
-  (cart) => cart.cartItems
+  cart => cart.cartItems
 );
 
 //hemos creado un selector que selecciona todos los CartItems que se encuentran en el state, y en la propiedad cart, y el resto no los toca.
@@ -17,10 +17,25 @@ export const selectCartItems = createSelector(
 
 export const selectCartItemsCount = createSelector(
   [selectCartItems],
-  (cartItems) => 
+  cartItems => 
     cartItems.reduce(
       (accumulatedQuantity, cartItem) =>
         accumulatedQuantity + cartItem.quantity,
+      0
+    )
+);
+
+export const selectCartHidden = createSelector(
+  [selectCart],
+  cart => cart.hidden
+);
+
+export const selectCartTotal = createSelector(
+  [selectCartItems],
+  cartItems => 
+    cartItems.reduce(
+      (accumulatedQuantity, cartItem) =>
+        accumulatedQuantity + cartItem.quantity * cartItem.price,
       0
     )
 );

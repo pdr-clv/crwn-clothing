@@ -1,9 +1,16 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
+import { createStructuredSelector} from 'reselect';
+
+import { selectCartHidden } from '../../redux/cart/cart.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+
 import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+
+
 
 import { ReactComponent as Logo} from '../../assets/corona.svg';
 
@@ -44,10 +51,23 @@ const Header = ({ currentUser,hidden }) => (
 	currentUser: state.user.currentUser
 });*/ // así es como se llamó la primera vez, cuando tienes que coger varias propiedades del state que hay en el store o en el root-reducer, se puede hacer desesctructuración.
 
+/* //Forma primitiva de llamar a mapStateToProps, antes de introducir los StateSelectors de memoized.
 const mapStateToProps = ({ user: {currentUser}, cart:{hidden}}) => ({
 	currentUser,
 	hidden
+}); */
+/* // esta es la siguiente forma de hacerlo, pero para no escribir muchas lineas con currentUser, hidden, and muchos mas, utilizaremos createStructuredSelector
+const mapStateToProps = state => ({
+	currentUser: selectCurrentUser(state),
+	hidden: selectCartHidden(state)
+}); */
+
+const mapStateToProps = createStructuredSelector({
+	currentUser: selectCurrentUser,
+	hidden: selectCartHidden
 });
+
+
 
 //connect es una función de orden superior de la libreria react-redux, que se le puede pasar el componente Header, y obtiene otro componente nuevo.
 //connect es la función que nos ayudará a acceder al estado en el store con ayuda del reducer.

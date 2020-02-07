@@ -17,6 +17,11 @@
     flex-direction: column;
 // overflow se puede poner solo en el eje y, si no queremos que aparezcan barras de desplazamiento en x.
     overflow-y: scroll;
+
+    .empty-message{
+      font-size: 18px;
+      margin: 50px auto;
+    }
   }
 
   button {
