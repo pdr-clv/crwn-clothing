@@ -6,16 +6,28 @@ import { BrowserRouter} from 'react-router-dom';
 //hay que asignar la propiedad store a Provider, para que store del state sea accesible desde cualquier componente haciendo uso de la función de orden superior connect(maptoProps,dispatchtoProps)("Componente")
 // hay que envolver a App con BrowserRouter para que funcione la "paginacion" o el routing
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import { PersistGate} from 'redux-persist/integration/react';
+// envolveremos el componente App con PersistGate para que pueda ser persistente el state.
+
+// forma primitiva , ahora hay que importar store and persitstore
+//import store from './redux/store';
+
+import { store, persistor } from './redux/store';
+
 
 
 import './index.css';
 import App from './App';
 
+// se le pasa al PersistGate las propiedades del persistor declarado en store.
+
+// persist detecta si hay algo en el state cuando se refresca el navegador. Si hay algo, cuando vuelve a cargar la página web, el state se quedará a cero, pero se disparará el action del persist, que hará que vuelva a cargar todo lo que había en el state, antes de refrescar el navegador
 ReactDOM.render(
 	<Provider store={store}>
-		<BrowserRouter>	
-			<App />
+		<BrowserRouter>
+			<PersistGate persistor={ persistor }>
+				<App />
+			</PersistGate>
 		</BrowserRouter>
 	</Provider>
 	, document.getElementById('root'));
