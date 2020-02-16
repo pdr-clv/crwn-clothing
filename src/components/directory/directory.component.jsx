@@ -1,12 +1,16 @@
 import React from 'react';
 
 import MenuItem from '../menu-item/menu-item.component';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { selectDirectorySections } from '../../redux/directory/directory.selectors';
 
-import './directory.styles.scss'
+
+import './directory.styles.scss';
 
 // aquí necesitamos guardar en state el valor de los items que se le pasará al menu-item. 
 // hay que crear una clase.
-
+/* Forma primitiva, antes de incluir en el state/store y en el rooot-reducer los sections
 class Directory extends React.Component{
   constructor() {
 		super();
@@ -58,6 +62,19 @@ class Directory extends React.Component{
 			</div>
 		)
 	}
-}
+}*/
 
-export default Directory;
+const Directory = ({sections}) => (
+	<div className='directory-menu'>
+	{sections.map(({id, ...otherProps})=>(
+		<MenuItem key = {id} {...otherProps}/>
+	))}
+	</div>
+);
+  
+const mapStateToProps = createStructuredSelector({
+	sections: selectDirectorySections
+});
+
+
+export default connect(mapStateToProps)(Directory);

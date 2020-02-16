@@ -1,9 +1,15 @@
 import React from 'react';
-import SHOP_DATA from './shop.data';
 
-import CollectionPreview from '../../components/collection-preview/collection-preview.component';
+import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
+
+import CollectionPage from '../collection/collection.component';
+
+//ahora que shopPage está completamente desligado de props. Vamos a enrutarla, y añadirle rutas. 
+
+import { Route } from 'react-router-dom';
 
 
+/*  // forma primitiva, se llamaba así antes de incluir el listado shop en el state/store
 class ShopPage extends React.Component{
 	constructor (props){
 		super(props);
@@ -21,6 +27,17 @@ class ShopPage extends React.Component{
 			))}	
 		</div>);
 	}
-}
+} */
+
+// tenemos acceso a las propiedades match, porque viene de una página enroutada de Página principal.
+// match.path tiene la información de la ruta donde está la página, y no hace falta escribirla manualmente. Así este componente es movible.
+const ShopPage = ({ match }) => (
+	<div className='shop-page'>
+		<Route exact path={`${match.path}`} component={CollectionsOverview} />
+		<Route path={`${match.path}/:collectionId`} component={CollectionPage} />
+
+	</div>
+);
+
 
 export default ShopPage;

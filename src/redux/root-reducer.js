@@ -10,6 +10,8 @@ import storage from 'redux-persist/lib/storage';
 
 import userReducer from './user/user.reducer';
 import cartReducer from './cart/cart.reducer';
+import directoryReducer from './directory/directory.reducer';
+import shopReducer from './shop/shop.reducer';
 
 //ahora que tenemos el store de nuestro localstore del navegador or browser, tenemos que definir el nuevo config de nuestro persistor
 // key porque está en root el state. storage, porque es el storage que está guardado en el localStorage del navegador, whitelist, porque queremos sólo que sea persistente cart, ya que user está guardado en Firebase, y no hace falta hacerlo persistente.
@@ -23,7 +25,9 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  directory: directoryReducer,
+  shop: shopReducer
 }); 
 
 // exportamos con persistReducer el rootReducer, con nuestra configuración de persisConfig.
