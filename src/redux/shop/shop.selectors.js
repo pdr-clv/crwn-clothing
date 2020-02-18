@@ -1,12 +1,5 @@
 import { createSelector } from 'reselect';
-// como la información que aparece en la url son strings hats, sneakers, etc, y la información en el state son números de id, se hace este mapeo.
-const COLLECTION_ID_MAP = {
-  hats:1,
-  sneakers:2,
-  jackets:3,
-  women:4,
-  men:5
-}
+
 
 const selectShop = state => state.shop;
 
@@ -15,11 +8,20 @@ export const selectCollections = createSelector(
   shop => shop.collections
 );
 
+// vamos a crear el selector SelectCollection, el resultado será un array, para que pueda ser mapeado después en el componente collections-overview.
+export const selectCollectionsForPreview = createSelector(
+  [selectCollections],
+  collections => 
+    Object.keys(collections).map(key => collections[key])
+// la función Object.keys("objeto") te devuelve un array con todas las keys que hay dentro de ese objeto. ["hats","sneakers","jackets" ...]
+// si este resultado, se mapea,y para cada key, se obtiene que collections hay, entonces el resultado de ese mapeo será un array, en el que cada elemento estará la collection de cada key del objeto collections original.
+);
+
 export const selectCollection = collectionUrlParam =>
 createSelector(
   [selectCollections],
-  collections => collections.find(collection => 
-    collection.id === COLLECTION_ID_MAP[collectionUrlParam])
+  collections => 
+    collections[collectionUrlParam]
 );
 
 // al haber hecho el mapeo en COLLECTION_ID_MAP, se utiliza para hacer la condición en el find de todas las collections a filtrar.
