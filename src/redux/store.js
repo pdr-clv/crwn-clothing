@@ -7,7 +7,11 @@ import logger from 'redux-logger';
 //logger será donde se almacene el middleware
 import rootReducer from './root-reducer';
 
-const middlewares = [logger];
+const middlewares = [];
+// middlewares se declara un array vacio. Si la aplicación se encuentra en modo development, eso quiere decir que se está ejecutando desde el servidor 3000 en modo local, entonces el middleware se rellenará con el logger, y entonces se verá como cambia el state en la consola. Si está en modo production, eso quiere decir, que está en la red, publicada la aplicación en heroku, entonces el logger no se rellenará, y no se verá en la consola esta información del state y del middleware
+if (process.env.NODE_ENV === 'development') {
+  middlewares.push(logger);
+}
 
 export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 //persistor es una variante persistente de nuestro store, que permanecerá guardada en localStore
