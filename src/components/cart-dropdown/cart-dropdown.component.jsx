@@ -15,9 +15,7 @@ import { withRouter } from 'react-router-dom';
 
 import './cart-dropdown.styles.scss';
 // se pasa un dispatch, desestructurado de las propiedades que tiene checkoutPage.
-const CartDropdown = ({ cartItems, history, dispatch }) => {
-  console.log(history);
-  return (
+const CartDropdown = ({ cartItems, history, dispatch }) => (
   <div className='cart-dropdown'>
     <div className='cart-items'>
       {
@@ -37,7 +35,7 @@ const CartDropdown = ({ cartItems, history, dispatch }) => {
     }
     >GO TO CHECKOUT</CustomButton>
   </div>
-)};
+);
 
 const mapStateToProps = createStructuredSelector({
   cartItems: selectCartItems
