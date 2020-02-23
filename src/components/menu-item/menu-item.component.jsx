@@ -1,23 +1,22 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
+import {
+	LinkMenuItem,
+	BackgroundImg,
+	ContentContainer
+} from './menu-item.styles';
 
-import './menu-item.styles.scss';
-
-const MenuItem = ({title,imageUrl,size,linkUrl}) => (
+const MenuItem = ({title,imageUrl,size,linkUrl,history,match}) => (
 // se engloba todo dentro de un Link en lugar de un div, y este Link se encargará de dirigirnos a la ruta que pasa el linkUrl 
-	<Link className={`${size} menu-item`} to={linkUrl}>
-		<div 
-		className='backgroung-image'
-		style={{
-			backgroundImage:`url(${imageUrl})`
-		}}
-		/>
-		<div className='content'>
-			<h1 className='title'>{title.toUpperCase()}</h1>
-			<span className='subtitle'>SHOP NOW</span>
-		</div>
-	</Link>
+	<LinkMenuItem size={size}
+	onClick={() => history.push(`${match.url}${linkUrl}`)}>
+		<BackgroundImg className='imagen' imageUrl={imageUrl} />
+		<ContentContainer className='contenido'>
+			<h1>{title.toUpperCase()}</h1>
+			<span>SHOP NOW</span>
+		</ContentContainer>
+	</LinkMenuItem>
 );
 
-export default MenuItem;
+export default withRouter(MenuItem);

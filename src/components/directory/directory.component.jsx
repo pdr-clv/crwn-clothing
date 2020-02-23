@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { selectDirectorySections } from '../../redux/directory/directory.selectors';
 
 
-import './directory.styles.scss';
+import { DirectoryMenu} from './directory.styles'
 
 // aquí necesitamos guardar en state el valor de los items que se le pasará al menu-item. 
 // hay que crear una clase.
@@ -65,11 +65,11 @@ class Directory extends React.Component{
 }*/
 
 const Directory = ({sections}) => (
-	<div className='directory-menu'>
+	<DirectoryMenu>
 	{sections.map(({id, ...otherProps})=>(
 		<MenuItem key = {id} {...otherProps}/>
 	))}
-	</div>
+	</DirectoryMenu>
 );
   
 const mapStateToProps = createStructuredSelector({

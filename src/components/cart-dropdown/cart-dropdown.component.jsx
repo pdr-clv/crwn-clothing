@@ -12,21 +12,24 @@ import { selectCartItems } from '../../redux/cart/cart.selectors';
 import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router-dom';
 // se importa withRouter, que almacena el history y localización de objetos de las rutas de nuestra url, y se puede direccionar a alguna ruta definida en App.js de las páginas que tendrá la aplicación. Es una función de orden superior, y te evita tener que estar pasando los parámetros de la ruta de la url donde quieres que vaya la aplicación al hacer clic en algun botón como Go to Checkout, que abrirá la página CheckoutPage
-
-import './cart-dropdown.styles.scss';
+import {
+  SpanEmptyMessage,
+  CartItemsContainer,
+  CartDropdownContainer
+  } from './cart-dropdown.styles';
 // se pasa un dispatch, desestructurado de las propiedades que tiene checkoutPage.
 const CartDropdown = ({ cartItems, history, dispatch }) => (
-  <div className='cart-dropdown'>
-    <div className='cart-items'>
+  <CartDropdownContainer>
+    <CartItemsContainer>
       {
         cartItems.length ?
         cartItems.map(cartItem => (
           <CartItem key={cartItem.id} item={ cartItem } />
         ))
         :
-        <span className='empty-message'>Your cart is empty</span>
+        <SpanEmptyMessage>Your cart is empty</SpanEmptyMessage>
       }
-    </div>
+    </CartItemsContainer>
     <CustomButton 
       onClick={()=>{
         history.push('/checkout');
@@ -34,7 +37,7 @@ const CartDropdown = ({ cartItems, history, dispatch }) => (
       }
     }
     >GO TO CHECKOUT</CustomButton>
-  </div>
+  </CartDropdownContainer>
 );
 
 const mapStateToProps = createStructuredSelector({

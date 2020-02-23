@@ -4,20 +4,24 @@ import { selectCollection} from '../../redux/shop/shop.selectors';
 
 import CollectionItem from '../../components/collection-item/collection-item.component';
 
-import './collection.styles.scss';
+import { 
+  CollectionItemsContainer,
+  CollectionTitle,
+  CollectionPageContainer
+  } from './collection.styles';
 
 const CollectionPage = ({ collection }) =>{
 // desestructuramos el collection recibido del state en item y en title para renderizarlos después con mas facilidad.
   const { title, items } = collection;
   return (
-  <div className='collection-page'>
-    <h2 className='title'>{title}</h2>
-      <div className='items'>
+  <CollectionPageContainer>
+    <CollectionTitle>{title}</CollectionTitle>
+      <CollectionItemsContainer>
       {items.map(item=>
         (<CollectionItem key={item.id} item={item}/>)
       )}
-      </div>
-  </div>
+      </CollectionItemsContainer>
+  </CollectionPageContainer>
 )};
 
 //aquí vamos a utilizar el segundo parametro de la función mapStateToProps. No vamos a utilizar el createStructureSelector el primero va a ser el state, el segundo, las otras propiedades que tiene el componente collection, que está la información que se le pasa en el match por el enrutamiento.

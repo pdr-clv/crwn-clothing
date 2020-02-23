@@ -4,7 +4,7 @@ import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
 import { auth, createUserProfileDocument} from '../../firebase/firebase.utils';
 
-import './sign-up.styles.scss';
+import { TitleForm, SignUpContainer} from './sign-up.styles';
 
 class SignUp extends React.Component {
 	constructor() {
@@ -57,8 +57,8 @@ class SignUp extends React.Component {
 // desectructuramos this.state en displayName, emai, password, etc, y se les pasa a los FormInput esos values
 		const {displayName, email, password, confirmPassword} = this.state;
 		return (
-			<div className='sign-up'>	
-				<h2 className='title'>I do not have an account</h2>
+			<SignUpContainer>	
+				<TitleForm>I do not have an account</TitleForm>
 				<span>Register with your e-mail and password</span>
 				<form className='sign-up-form' onSubmit={this.handleSubmit}>
 					<FormInput 
@@ -91,7 +91,7 @@ class SignUp extends React.Component {
 						required />
 					<CustomButton type='submit'>SIGN UP</CustomButton>				
 				</form>
-			</div>
+			</SignUpContainer>
 		)
 	}
 }
