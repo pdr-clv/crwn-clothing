@@ -15,7 +15,7 @@ import CheckoutPage from './pages/checkout/checkout.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument} from './firebase/firebase.utils';
 // se importa setCurrentUser, el action que obtendrá el CurrentUser el store, que está en el user.reducer y root-reducer. Se utilizará esta función en el dispatch (envio de currentUser como Props)
 import { setCurrentUser } from './redux/user/user.actions';
 
@@ -35,6 +35,8 @@ class App extends React.Component {
   unsubscribeFromAuth = null
 
   componentDidMount(){
+
+
 //hacemos una desestructuración de setCurrentUser de this.props.
     const {setCurrentUser} = this.props;
 
@@ -60,6 +62,8 @@ class App extends React.Component {
 // ya no hace falta hacer this.setState, y el currentUser: se le pasa directamente el objeto userAuth.
         setCurrentUser(userAuth);
       } 
+// hemos utilizado esta función para añadir la colección 'collections' a nuestro firebase. se ha pasado un collectionsArray que se ha cargado desde el selector, y se ha hecho un map y una desectructuración de title e item, que eran los únicos objetos que queriamos poner en el firebase.
+//      addCollectionAndDocuments('collections',collectionsArray.map(({title,items})=>({title,items})));
     });
   }
 
@@ -86,7 +90,7 @@ class App extends React.Component {
 //render dentro de Route te permite renderizar la página SigInAndSignOut si se cumple una condición del currentUser es null
 //cuando llamamos a mapStateToProps, disgregamos user del state. al ser App componente de clase, para utilizar el valor currentUser, hay que hacer this.props.currentUser
 const mapStateToProps = createStructuredSelector({
-	currentUser: selectCurrentUser
+  currentUser: selectCurrentUser
 });
 
 // podemos pasar el valor currentUser que está guardado en el root-reducer o el store del state. Lo podemos utilizar haciendo this.props.currentUser

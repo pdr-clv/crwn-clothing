@@ -39,7 +39,25 @@ export const createUserProfileDocument = async (userAuth,additionalData) => {
 
   return userRef;
 
-}
+};
+
+// creamos una nueva función o utilidad de firebase para poder importar datos desde un objeto Json a una colleción con sus documentos en firebase.
+// si la función no tiene un await, no hace falta poner un async al generar la función delante de (collection,objectoToAdd)
+export const addCollectionAndDocuments = async (collectionKey,objectsToAdd) => {
+  const collectionRef = firestore.collection(collectionKey);
+//creamos un batch, esto son transacciones, se pone dentro todo del batch, y al final se hace un commit, y nos aseguramos que se ejecuta el batch entero, y si algo falla, no se ejecuta nada.
+  const batch = firestore.batch();
+// para cada elemento del objeto a añadir, se hace un forEach.
+  objectsToAdd.forEach(obj => {
+    const newDocRef = collectionRef.doc(); // al dejar doc() vacio, nos genera un id aleatorio
+    console.log(newDocRef);
+//ahora que tenemos el documento creado dentro de la colección, vamos a añadir el documento a la colección.
+//aquí utilizaremos el batch creado antes. Para añadir el documento, los parametros son la dupla (documento,objeto)
+    batch.set(newDocRef,obj);
+  });
+// batch es una promesa, hay que poner await delante de la función batch, y la función global hay que llamarla async
+  return await batch.commit();
+};
 
 firebase.initializeApp(config);
 
