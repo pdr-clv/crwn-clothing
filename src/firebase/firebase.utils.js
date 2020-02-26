@@ -13,6 +13,8 @@ const config = {
   measurementId: "G-6NMMPF19ST"
 };
 
+firebase.initializeApp(config);
+
 export const createUserProfileDocument = async (userAuth,additionalData) => {
 // si el usuario no está logeado o sign ineado, return, y no se sigue ejecutando nada mas.
   if (!userAuth) return;
@@ -58,8 +60,37 @@ export const addCollectionAndDocuments = async (collectionKey,objectsToAdd) => {
 // batch es una promesa, hay que poner await delante de la función batch, y la función global hay que llamarla async
   return await batch.commit();
 };
+// esta función nos permitirá transformar el objeto obtenido de firebase en un objeto adaptado para nuestro redux, que tenga route y que tenga id el objeto de redux.
 
-firebase.initializeApp(config);
+export const convertCollectionsSnapshotToMap = (collections) =>{
+//se creará una nueva colleción transformada, añadiendo route e id a title e items, que ya existe en cada documento
+  const transformedCollection = collections.docs.map(doc=>{
+//haciendo collections.docs obtenemos los documentos que hay en esa collection, y se hace un map para acceder doc a doc. En cada doc, se hace una desestructuración, y cogemos title e item, que es lo que necesitamos.
+    const {title,items} = doc.data();
+// al hacer .data() a un doc, obtenemos el objeto que hay dentro de ese doc.
+    return {
+// se utilizará el método endodeURI para que sea válido para enruta después en un URL
+      routeName:encodeURI(title.toLowerCase()),
+      id: doc.id,
+// id no lo obtenemos en doc.data(), necesitamos obtenerlo desde el doc.id. Es el id de cada documento incluido en la colección 'collections'
+      title,
+      items
+    }
+  });
+
+// para comprobar que el transfromedCollection es correcto  console.log(transformedCollection); pero esto es un array, no es el objeto que necesitamos que tenga los datos normalizados y sea fácil llamar desde el selector de redux
+// ahora utilizando la función reduce, vamos a obtener el objeto que sea {hats: ..., sneackers:...., ....}
+// transformedCollection.reduce se le pasa dos parametros, primero la función que tiene un accumulator, y segundo el valor inicial a cada iteración, que será un objeto vacio.
+
+  return transformedCollection.reduce((accumulator,docCollection) => {
+//la función con el accumulator hará que se cree un array, en la que los documentos de la colleción serán los elementos, y cada key de cada elemento será el title, que a su vez se pondrá el tolowerCase.
+    accumulator[docCollection.title.toLowerCase()]=docCollection;
+// devuelve este nuevo elemento del objeto, y así hasta hacer todos los elementos de la colleción.
+    return accumulator;
+  },{});
+
+};
+
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();

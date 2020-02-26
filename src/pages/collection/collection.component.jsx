@@ -10,6 +10,9 @@ import {
   CollectionPageContainer
   } from './collection.styles';
 
+// cuando cargamos la aplicación, collections en redux necesita tiempo para cargar, y en ese periodo de tiempo, al cargar esta página, encuentra el error que la collection no está cargada, y el valor de collection es null, y nos da error.
+//tenemos que envolver la página en un withSpinner. Se generará el state loading, y mientras esté en loading = true, se mostrará el spinner, y cuando sea false, se mostrará la página.
+//aunque sea comprensible poner aquí el WithSpinner, se pondrá en la paǵina ShopPage, ya que es donde se carga la información de firebase, y se pasa a redux, y es donde se puede determinar si el estado loading es true o false.
 const CollectionPage = ({ collection }) =>{
 // desestructuramos el collection recibido del state en item y en title para renderizarlos después con mas facilidad.
   const { title, items } = collection;

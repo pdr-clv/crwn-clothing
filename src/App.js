@@ -63,6 +63,7 @@ class App extends React.Component {
         setCurrentUser(userAuth);
       } 
 // hemos utilizado esta función para añadir la colección 'collections' a nuestro firebase. se ha pasado un collectionsArray que se ha cargado desde el selector, y se ha hecho un map y una desectructuración de title e item, que eran los únicos objetos que queriamos poner en el firebase.
+// hemos pasado unicamente title e items, puesto que route o id, se calcularán id y route cuando carguemos la información desde backend al store de redux
 //      addCollectionAndDocuments('collections',collectionsArray.map(({title,items})=>({title,items})));
     });
   }
