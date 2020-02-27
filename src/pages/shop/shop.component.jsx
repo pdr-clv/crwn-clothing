@@ -60,8 +60,10 @@ class ShopPage extends React.Component {
 		const { updateCollections }=this.props;
 // cargaremos la colección de 'collections' que es la que tiene la información de de los objetos de collections, y se puede acceder a toda esa información haciendo docs.
 		const collectionRef=firestore.collection('collections');
-
-		collectionRef.onSnapshot(async snapshot => {
+// onSnapshot es una subscripción al backend, propia de firebase, es un listener, que cada vez que hay un Snapshot, ejecuta el código que hay dentro de la función, podemos hacer una subscripción nativa, no propia de firebase con un Collection.set().then(ejecutar la función aquí) "porque es una promesa ponemos then", pero no será un listener, sólo se ejecutará una vez, cuando se haga montaje del componente. Lo dejaremos en la segunda opción, la subscripción de onSnapshot la dejo comentada.
+//
+//			collectionRef.onSnapshot(async snapshot => {
+		collectionRef.get().then( snapshot => {	
 			const collectionToMap= convertCollectionsSnapshotToMap(snapshot);
 // console.log(collectionToMap); para comprobar que es el objeto correcto que queremos guradar en redux, ahora vamos a ver como lo guardamos. Generaremos un action, y después haremos un dispatch a redux.
 			updateCollections(collectionToMap);
