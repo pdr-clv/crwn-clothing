@@ -28,4 +28,13 @@ createSelector(
     null
 );
 
-// al haber hecho el mapeo en COLLECTION_ID_MAP, se utiliza para hacer la condición en el find de todas las collections a filtrar.
+export const selectIsCollectionFetching = createSelector(
+  [selectShop],
+  shop => shop.isFetching
+);
+
+export const selectIsCollectionsLoaded = createSelector(
+  [selectShop],
+  shop => !!shop.collections
+// ! de un valor no nulo, es true, !! de un valor no nulo, es falso.
+);
