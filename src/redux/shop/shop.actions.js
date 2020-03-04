@@ -15,7 +15,7 @@ export const fetchCollectionsSuccess = collectionsMap => ({
 export const fetchCollectionsFailure = errorMsg => ({
   type: ShopActionTypes.FETCH_COLLECTIONS_FAILURE,
   payload:errorMsg
-})
+});
 
 //thunk es un actioncreator que nos devuelve una función dispatch en las acciones, y el resultado seguira siendo un objeto
 //en vez de crear un action que devuelve un objeto, vamos a crear una acción que devolverá una función que haremos dispatch, y el dispatch será llamado en varias acciones.

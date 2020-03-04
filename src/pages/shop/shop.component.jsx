@@ -11,7 +11,8 @@ import CollecctionOverviewContainer from '../../components/collections-overview/
 //hará falta firestore para poder conectarse a firebase.
 //import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils'; // ya no hace falta al pasar la actividad asyncrona a redux con thunk
 //importamos la acción del shop redux updateCollections, que cargará en el redux las colleciones cargadas desde firebase. También importaremos connect, y así podremos hacer dispatch a redux
-import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+//cuando existia Thunk, se llamaba a fetchCollectionStartAsync
+import { fetchCollectionsStart } from '../../redux/shop/shop.actions';
 import { connect } from 'react-redux';
 
 //ahora que shopPage está completamente desligado de props. Vamos a enrutarla, y añadirle rutas. 
@@ -63,8 +64,8 @@ class ShopPage extends React.Component {
 	componentDidMount(){
 // tenemos que comenzar la actividad asincrona en el redux, enviandole fetchCollectionStartAsync()
 //primer hace desesctructuración de las propiedades.
-		const{ fetchCollectionsStartAsync } = this.props;
-		fetchCollectionsStartAsync();
+		const{ fetchCollectionsStart } = this.props;
+		fetchCollectionsStart();
 	}
 
 	render(){
@@ -98,7 +99,7 @@ class ShopPage extends React.Component {
 //se puede hacer también para el componente cart-dropdown.component
 
 const mapDispatchToProps = dispatch =>({
-	fetchCollectionsStartAsync:() => dispatch(fetchCollectionsStartAsync())
+	fetchCollectionsStart:() => dispatch(fetchCollectionsStart())
 })
 // ahora ya podemos utilizar el método updateCollections, haremos una desectructuración {updateCollections}=this.props
 export default connect(null,mapDispatchToProps)(ShopPage);
