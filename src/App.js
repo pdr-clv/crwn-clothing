@@ -15,9 +15,9 @@ import CheckoutPage from './pages/checkout/checkout.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth, createUserProfileDocument} from './firebase/firebase.utils';
+//import { auth, createUserProfileDocument} from './firebase/firebase.utils';
 // se importa setCurrentUser, el action que obtendrá el CurrentUser el store, que está en el user.reducer y root-reducer. Se utilizará esta función en el dispatch (envio de currentUser como Props)
-import { setCurrentUser } from './redux/user/user.actions';
+import { checkUserSession } from './redux/user/user.actions';
 
 import './App.css';
 
@@ -35,12 +35,17 @@ class App extends React.Component {
   unsubscribeFromAuth = null
 
   componentDidMount(){
+// cuando se monta el componente, se carga App, y se mirará a ver si hay un usuario logueado. 
+// se pasará a user Saga el evento checkUserSession, y el saga lo interceptará, y dirigirá la actividad para dejar el usuari logueado, si existiria, o para no hacer nada, si no hubiera usuario logueado.
 
+    const { checkUserSession } = this.props;
 
+    checkUserSession()
+    
 //hacemos una desestructuración de setCurrentUser de this.props.
-    const {setCurrentUser} = this.props;
+//    const {setCurrentUser} = this.props;
 
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{
+  /*  this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
         
@@ -51,7 +56,7 @@ class App extends React.Component {
               id:snapShot.id,
               ...snapShot.data()
             }
-          }) */
+          }) 
           setCurrentUser({
             id:snapShot.id,
             ...snapShot.data()
@@ -65,7 +70,7 @@ class App extends React.Component {
 // hemos utilizado esta función para añadir la colección 'collections' a nuestro firebase. se ha pasado un collectionsArray que se ha cargado desde el selector, y se ha hecho un map y una desectructuración de title e item, que eran los únicos objetos que queriamos poner en el firebase.
 // hemos pasado unicamente title e items, puesto que route o id, se calcularán id y route cuando carguemos la información desde backend al store de redux
 //      addCollectionAndDocuments('collections',collectionsArray.map(({title,items})=>({title,items})));
-    });
+    });*/
   }
 
   componentWillUnmount(){
@@ -96,8 +101,9 @@ const mapStateToProps = createStructuredSelector({
 
 // podemos pasar el valor currentUser que está guardado en el root-reducer o el store del state. Lo podemos utilizar haciendo this.props.currentUser
 
+//checkUserSession se comprobará en componentDidMount para saber si hay un usuario logueado o o no.
 const mapDispatchToProps = dispatch =>({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  checkUserSession: () => dispatch(checkUserSession())
 });
 //con mapDispatchToProps se enviará el cambio de estado registrado con setCurrentUser al rootReducer, a través del action. Con esto evitaremos tener que guardar el state en this.state, ya que se guardará en el rootreducer, y el evento this.setState.setCurrentUser se cambiará a this.props.SetCurrentUser (App es componente de clase, y se tiene que poner this.props antes de SetCurrentUser) que se encuentra en el action, y se pasa al reducer.
 //haciendo esto. setCurrentUser es una función que asigna el usuario al state, se puede utilizar haciendo this.props.setCurrentUser.

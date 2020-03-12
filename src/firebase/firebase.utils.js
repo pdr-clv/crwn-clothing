@@ -91,12 +91,23 @@ export const convertCollectionsSnapshotToMap = (collections) =>{
 
 };
 
+//haremos una comprobación de si existe usuario logueado al cargar la página, o al hacer refresh, para que haya persistencia de usuario logueado.
+
+export const getCurrentUser = () => {
+  return new Promise((resolve,reject) => {
+// es una promesa, que captará el saga y se hará yield, que es como un async/await, enseguida detectaremos si hay un user autenticado, si lo hay haremos inmediatamente unsubscribe, y la promesa resolverá el usuario que hay    
+    const unsubscribe=auth.onAuthStateChanged(userAuth =>{
+      unsubscribe();
+      resolve(userAuth);
+    },reject);
+  });
+}
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
-
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt:'select_account' });
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+// exportaremos todas estas funcionaes al userSaga, que es donde se hará la actividad asincrona.
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt:'select_account' });
+//export const signInWithGoogle = () => auth.signInWithPopup(provider); // ahora se ejecutará la función sigInWithPopup en userSaga
 
 export default firebase;

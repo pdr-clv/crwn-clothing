@@ -5,8 +5,8 @@ import { createStructuredSelector} from 'reselect';
 
 import { selectCartHidden } from '../../redux/cart/cart.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { signOutStart } from '../../redux/user/user.actions';
 
-import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
@@ -22,7 +22,7 @@ import {
 } from './header.styles';
 
 
-const Header = ({ currentUser,hidden }) => (
+const Header = ({ currentUser,hidden,signOutStart }) => (
 	<HeaderContainer>
 		<LogoContainer to='/'>
 			<Logo className='logo' />
@@ -36,7 +36,7 @@ const Header = ({ currentUser,hidden }) => (
 			</OptionLink>
 			{
 				currentUser ?
-				<OptionLink as='div' onClick={()=>auth.signOut()}>SIGN OUT</OptionLink>
+				<OptionLink as='div' onClick={signOutStart}>SIGN OUT</OptionLink>
 				:
 				<OptionLink to='/signin'>SIGN IN</OptionLink>
 
@@ -71,11 +71,13 @@ const mapStateToProps = createStructuredSelector({
 	currentUser: selectCurrentUser,
 	hidden: selectCartHidden
 });
-
-
+// haremos dispatch to State las props de signOutStart. Siempre se hace así.
+const mapDispatchToProps = dispatch =>({
+	signOutStart:()=>dispatch(signOutStart())
+})
 
 //connect es una función de orden superior de la libreria react-redux, que se le puede pasar el componente Header, y obtiene otro componente nuevo.
 //connect es la función que nos ayudará a acceder al estado en el store con ayuda del reducer.
 // mapStateToProps coge el estado que está en root-reducer, y se accede a user de root-reducer, y después a currentUser que está en el user.reducer.
 // con este mapStateToProps podemos acceder al valor currentUser, y es el que se pasará como argumento a la propiedad currentUser a <Header currentUser={currentUser}</> 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps,mapDispatchToProps)(Header);

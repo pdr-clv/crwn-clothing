@@ -1,8 +1,10 @@
 import React from 'react';
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
+import { connect } from 'react-redux';
 
-import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
+import { googleSignInStart,emailSignInStart } from '../../redux/user/user.actions';
+
 
 import {
 	SignInContainer,
@@ -24,7 +26,10 @@ class SignIn extends React.Component {
 		event.preventDefault();
 
 		const {email, password} = this.state;
-
+		const {emailSignInStart} = this.props;
+		emailSignInStart(email,password);
+/*
+//no nos hará falta este try, catch, puesto que se hará esta llamada asincrona desde el saga.
 		try {
 			await auth.signInWithEmailAndPassword(email,password);
 			alert('Success Signing In \nWelcome!');
@@ -33,8 +38,8 @@ class SignIn extends React.Component {
 		} catch (err) {
 			console.error('Error logueando usuario',err.message);
 			alert('Error logging in \n' + err.message);
-		}
-
+		} 
+*/
 	}
 
 	handleChange = event => {
@@ -44,6 +49,7 @@ class SignIn extends React.Component {
 	}
 
 	render() {
+		const { googleSignInStart }=this.props;
 		return(
 			<SignInContainer>
 				<h2>I already have an account</h2>
@@ -59,7 +65,7 @@ class SignIn extends React.Component {
 					value ={this.state.password} required/>
 					<ButtonsContainer>
 						<CustomButton type='submit'>Sign In</CustomButton>
-						<CustomButton onClick={signInWithGoogle} isGoogleSignIn>
+						<CustomButton type='button' onClick={googleSignInStart} isGoogleSignIn>
 							Sign In with Google
 						</CustomButton>
 					</ButtonsContainer>
@@ -69,4 +75,10 @@ class SignIn extends React.Component {
 	}
 }
 
-export default SignIn;
+const mapDispatchToProps = dispatch => ({
+	googleSignInStart:()=> dispatch(googleSignInStart()),
+	emailSignInStart:(email,password) => dispatch(emailSignInStart({email,password}))
+});
+
+
+export default connect(null,mapDispatchToProps)(SignIn);

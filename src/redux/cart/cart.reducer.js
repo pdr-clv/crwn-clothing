@@ -33,6 +33,12 @@ const cartReducer = (state = INITIAL_STATE,action) => {
 //para que cada vez que se añada el cartItems, si es duplicado se aumente la cantidad en uno, se utiliza la función definida en cart.utils AddItemToCart
         cartItems: addItemToCart(state.cartItems, action.payload)
       };
+    case CartActionTypes.CLEAR_CART:
+      return {
+// se quiere poner los cartItems a cero, por eso se hará un cartItems:[]
+        ...state,
+        cartItems: []
+      };
     default:
       return state;
   }
