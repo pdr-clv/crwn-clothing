@@ -2,7 +2,12 @@ import React from 'react';
 
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
-import { auth, createUserProfileDocument} from '../../firebase/firebase.utils';
+import { connect } from 'react-redux';
+
+import { signUpStart } from '../../redux/user/user.actions';
+
+//ahora ya no necesitamos utilizar la libreria auth de firebase aquí.
+//import { auth, createUserProfileDocument} from '../../firebase/firebase.utils';
 
 import { TitleForm, SignUpContainer} from './sign-up.styles';
 
@@ -23,13 +28,20 @@ class SignUp extends React.Component {
 		event.preventDefault();
 
 		const {displayName, email, password, confirmPassword} = this.state;
+		const { signUpStart } = this.props;
 
 		if (password !== confirmPassword) {
 			alert("Password and Confirm Password don't match");
 			return;
 		}
-
-		try{
+		signUpStart({displayName,email,password});
+/*		this.setState({
+			displayName:'',
+			email:'',
+			password:'',
+			confirmPassword:''
+		});*/
+/*		try{
 // auth.createUserWithEmailAndPassword es un método de firebase, que te permite crear un nuevo usuario pasandole email and password.
 			const {user} = await auth.createUserWithEmailAndPassword(email,password);
 			await createUserProfileDocument(user,{displayName});
@@ -43,7 +55,7 @@ class SignUp extends React.Component {
 		} catch (err){
 			console.error('error creando usuario',err.message);
 			alert('Error creating new user \n' + err.message);
-		}
+		}*/
 	};
 
 	handleChange = event=> {
@@ -96,4 +108,8 @@ class SignUp extends React.Component {
 	}
 }
 
-export default SignUp
+const mapDispatchToProps = dispatch => ({
+	signUpStart:userCredentials => dispatch(signUpStart(userCredentials))
+});
+
+export default connect(null,mapDispatchToProps)(SignUp);

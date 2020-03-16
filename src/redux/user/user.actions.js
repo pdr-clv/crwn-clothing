@@ -36,4 +36,19 @@ export const signOutFailure = err => ({
   payload: err
 });
 
+export const signUpStart = userCredentials => ({
+  type: UserActionTypes.SIGN_UP_START,
+  payload: userCredentials
+});
+//hace falta el user, y el display name, que se pasará en el objeto additionalData
+export const signUpSuccess = ({ user, additionalData}) => ({
+  type: UserActionTypes.SIGN_UP_SUCCESS,
+  payload: { user, additionalData}
+//se puede pasar como un objeto, sin hacer desestructuración, pero es mas visible e inteligible hacerlo así.
+});
+
+export const signUpFailure = err => ({
+  type:UserActionTypes.SIGN_UP_FAILURE,
+  payload: err
+});
 
