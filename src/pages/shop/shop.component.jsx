@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import CollectionPageContainer from '../collection/collection.container';
 import CollecctionOverviewContainer from '../../components/collections-overview/collections-overview.container';
@@ -45,8 +45,9 @@ class ShopPage extends React.Component{
 // creamos dos componentes que son simplemente collecionOverview y colletionPage, pero se envuelven en withSpinner, y así, según sea el state loading o no, se utilizará un componente withSpinner, o el componente normal.
 //const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
 //const CollectionPageWithSpinner = WithSpinner(CollectionPage);
-
-class ShopPage extends React.Component {
+//se pasará a componente funcional gracias a useEffect y Hooks
+//class ShopPage extends React.Component {
+const ShopPage = ({ fetchCollectionsStart, match }) => {
 //se puede incluir en el reducer, de moment lo ponemos aquí, ya que sólo lo vamos a utlizar aquí de momento el estado loading.
 //forma corta.
 //	state={loading:true}; // ya no hace falta el state, puesto que se ha pasado la actividad asincrona al redux gracias a thunk
@@ -54,39 +55,40 @@ class ShopPage extends React.Component {
 //tenemos que envolver collectionsOverview y collectionsPage en un withSpinner. Se generará el state loading, y mientras esté en loading = true, se mostrará el spinner, y cuando sea false, se mostrará la página.
 //aunque sea comprensible poner el WithSpinner en los componentes collections Overview y colletionsPage, se pondrá aquí, ya que es donde se carga la información de firebase, y se pasa a redux, y es donde se puede determinar si el estado loading es true o false.
 
-
+	useEffect(()=>{
+		fetchCollectionsStart();
+	},[fetchCollectionsStart]);
+//se puede poner en el array fetchCollectionsStart, ya que no se va a modificar nada, sólo cuando se haga un mapDispatchtoProps
 // se hará fetch de la información de bakcend de collections en este componente, ya que es el componente padre de todos los hijos que utilizarán el redux del store del state collections.
 // cuando el componente se monte, cargaremos desde el backend la información a redux.
 // para empezar, se hace unsubscribe = null, para que cuando se desmonte el componente, rompa la conexión con el backend (con la referencia de firebase), y no ocupar memoria, ni que haya fuga de memoria "memory leak"
 
 //	unsubscribeFromSnapshot=null; //antes de estar la actividad asincrona en el redux, con thunk, se hacía de esta forma, ahora sólo se carga en component willmount con el selector de redux y suficiente, no hay que hacer unsubscribe.
-
+/*
 	componentDidMount(){
 // tenemos que comenzar la actividad asincrona en el redux, enviandole fetchCollectionStartAsync()
 //primer hace desesctructuración de las propiedades.
-		const{ fetchCollectionsStart } = this.props;
 		fetchCollectionsStart();
-	}
+	}*/
 
-	render(){
+//	render(){
 // tenemos acceso a las propiedades match, porque viene de una página enroutada de Página principal.
 // match.path tiene la información de la ruta donde está la página, y no hace falta escribirla manualmente. Así este componente es movible.
 // hcemos una desestructuración de match en this.props, para que sea mas entendible cuando lo llamemos mas adelante.
-		const { match }=this.props;
 //		const { loading } = this.state; // esto es de cuando se hacia la actividad asincrona en este componente, y no en el redux, ahora nos lo proporciona el redux.
-		return (
-			<div className='shop-page'>
-				<Route exact path={`${match.path}`} component = { CollecctionOverviewContainer} />
-				<Route path={`${match.path}/:collectionId`} component = {CollectionPageContainer} />
-		
-			</div>
-		);
+	return (
+		<div className='shop-page'>
+			<Route exact path={`${match.path}`} component = { CollecctionOverviewContainer} />
+			<Route path={`${match.path}/:collectionId`} component = {CollectionPageContainer} />
+	
+		</div>
+	);
 // la proppiedad isloading para el withSpinner es perfecta para CollectionsOverview, pero no en CollectionPage no es del todo válida, porque puede ser que no esté cargando la página, pero el collection sea null, entonces, isLoadin, hay que pasarle un valor diferente de isCollectionFetching. Por ejemplo se le pasará isCollectionLoaded, entonces eso significa que no está Loading, y que además, no es null, tiene un valor.
 // crearemos un selector del state de redux, el cual, cuando se haya cargado la propiedad collection desde backend, entonces nos devuelva un true como que la colección ya está cargada. Es diferente al selector de saber si la collección está haciendo fetching.
 // inicialmente, antes de poner el spinner era simplemente poner component y el componente, ahora, con el spinner, se utiliza render, y es una función, que hay que pasarle los parametros match, para que puedan cargar el componente correcto collectionOverview o collectionPage
 // <Route exact path={`${match.path}`} component={CollectionsOverview} />
 // <Route path={`${match.path}/:collectionId`} component={CollectionPage} />
-	}
+//	}
 }
 
 //form primitiva, cuando hacía falta cargar las propiedades desde el state.Se va a comentar el código. Y se generará nuevos componentes de orden superior.
