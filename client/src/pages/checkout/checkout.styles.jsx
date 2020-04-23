@@ -19,6 +19,12 @@ export const HeaderBlock = styled.div`
   &:last-child {
     width: 8%;
   }
+  @media screen and (max-width:800px) {
+      width: 22%;
+    &:last-child {
+      width: 12%;
+    }
+  }
 `;
 // la última columna de header-block será mas estrecha, es sól para añadir le opción de quitar de la compra el item
 
@@ -41,5 +47,9 @@ export const CheckOutPageContainer = styled.div`
   button {
     margin-left: auto;
     margin-top: 50px;
+  }
+
+  @media screen and (max-width:800px){
+    width:90%;
   }
 `;

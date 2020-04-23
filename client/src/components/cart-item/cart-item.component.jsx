@@ -17,4 +17,5 @@ const CartItem = ({ item: {imageUrl, price, name, quantity} }) => (
   </CartItemContainer>
 );
 
-export default CartItem;
+export default React.memo(CartItem);
+//al hacer el componente React.memo se renderizará sólo si se pasa nuevo item, si la propiedad que se pasa item no cambia, no se volverá a renderizar.

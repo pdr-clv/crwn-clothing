@@ -1,7 +1,4 @@
-import React, { useEffect } from 'react';
-
-import CollectionPageContainer from '../collection/collection.container';
-import CollecctionOverviewContainer from '../../components/collections-overview/collections-overview.container';
+import React, { useEffect, lazy, Suspense } from 'react';
 
 //No harán falta los componentes CollectionsOverview, ni CollectionPage, y cargaremos los componentes de orden superior que los envuelve, y no hace falta cargar mapStateToProps. Ni hace connect.
 //import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
@@ -18,10 +15,14 @@ import { connect } from 'react-redux';
 //ahora que shopPage está completamente desligado de props. Vamos a enrutarla, y añadirle rutas. 
 
 import { Route } from 'react-router-dom';
-// importamos WithSpinner para envolver los componentes CollectionsOverview y CollectionsPage, hasta que se haya cargado el redux con los datos de firebase.
-//import WithSpinner from '../../components/with-spinner/with-spinner.component'; // no nos hará falta si se crea un componete de orden superior para envolver el mapStateToProps.
+//importamos Spinner para envolver el Suspense, y mientras está cargandose el Suspense por la función lazy, se vé el Spinner
 
+import Spinner from '../../components/spinner/spinner.component';
 
+//import CollectionPageContainer from '../collection/collection.container';
+//import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
+const CollectionsOverviewContainer = lazy(()=>import('../../components/collections-overview/collections-overview.container'));
+const CollectionPageContainer = lazy(()=>import('../collection/collection.container'));
 /*  // forma primitiva, se llamaba así antes de incluir el listado shop en el state/store
 class ShopPage extends React.Component{
 	constructor (props){
@@ -78,9 +79,10 @@ const ShopPage = ({ fetchCollectionsStart, match }) => {
 //		const { loading } = this.state; // esto es de cuando se hacia la actividad asincrona en este componente, y no en el redux, ahora nos lo proporciona el redux.
 	return (
 		<div className='shop-page'>
-			<Route exact path={`${match.path}`} component = { CollecctionOverviewContainer} />
-			<Route path={`${match.path}/:collectionId`} component = {CollectionPageContainer} />
-	
+			<Suspense fallback={<Spinner/>}>
+				<Route exact path={`${match.path}`} component = {CollectionsOverviewContainer} />
+				<Route path={`${match.path}/:collectionId`} component = {CollectionPageContainer} />
+			</Suspense>
 		</div>
 	);
 // la proppiedad isloading para el withSpinner es perfecta para CollectionsOverview, pero no en CollectionPage no es del todo válida, porque puede ser que no esté cargando la página, pero el collection sea null, entonces, isLoadin, hay que pasarle un valor diferente de isCollectionFetching. Por ejemplo se le pasará isCollectionLoaded, entonces eso significa que no está Loading, y que además, no es null, tiene un valor.

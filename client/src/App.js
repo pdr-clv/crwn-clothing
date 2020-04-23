@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,lazy,Suspense } from 'react';
 // para no tener un componente de clase, y solo utilizar componentDidMount, es mejor utilizar useEffects de Hooks, y el componente será funcional.
 //capitulo 67: propiedades match,location y history. Muy interesante para ver como dirigirse a las rutas y url, utilizando history, :id, etc.
 import { Route,Switch,Redirect } from 'react-router-dom';
@@ -6,21 +6,30 @@ import { Route,Switch,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from 'reselect';
-import { selectCurrentUser } from './redux/user/user.selectors'; 
+import { selectCurrentUser } from './redux/user/user.selectors'; import Header from './components/header/header.component';
 
-// Route permite que se pueda hacer paginacion e ir a los /algo.
-//Switch se encarga de que en cuanto coincida una, ya no busque mas /algo
-import HomePage from './pages/homepage/homepage.component';
-
-import CheckoutPage from './pages/checkout/checkout.component';
-import ShopPage from './pages/shop/shop.component';
-import Header from './components/header/header.component';
-import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 //import { auth, createUserProfileDocument} from './firebase/firebase.utils';
 // se importa setCurrentUser, el action que obtendrá el CurrentUser el store, que está en el user.reducer y root-reducer. Se utilizará esta función en el dispatch (envio de currentUser como Props)
 import { checkUserSession } from './redux/user/user.actions';
 
-import './App.css';
+import { GlobalStyle } from './global.styles';
+
+import Spinner from './components/spinner/spinner.component';
+
+import ErrorBoundary from './components/error-boundary/error-boundary.component';
+
+
+// Route permite que se pueda hacer paginacion e ir a los /algo.
+//Switch se encarga de que en cuanto coincida una, ya no busque mas /algo
+//import HomePage from './pages/homepage/homepage.component';
+const HomePage = lazy(()=>import('./pages/homepage/homepage.component'));
+//import CheckoutPage from './pages/checkout/checkout.component';
+const CheckoutPage = lazy(()=>import('./pages/checkout/checkout.component'));
+//import ShopPage from './pages/shop/shop.component';
+const ShopPage = lazy(()=>import('./pages/shop/shop.component'));
+
+//import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
+const SignInAndSignUpPage = lazy(()=>import('./pages/sign-in-and-sign-up/sign-in-and-sign-up.component'));
 
 
 const App = ({ checkUserSession, currentUser }) => {
@@ -85,16 +94,22 @@ const App = ({ checkUserSession, currentUser }) => {
 // para que funcione Swtich, hay que envolver Route
 //Route necesita los parametros exact (tiene que ser exacto el /),path, que es la ruta que estará ingresada en el url, y component que es el componente (que normalmente será una página creada por nosotros, que se cargará)
 // no hace falta hacer render, sólo return, ya que se pasa a componente funcional gracias a Hooks.
+//se envuelve en el componente Suspense todo lo que se utiliza con lazy para cargar los chunks poco a poco
 //  render(){
   return (
     <div>
-      <Header />
-      <Switch>
-        <Route exact path='/' component={HomePage} />
-        <Route path='/shop' component={ShopPage} />
-        <Route exact path='/checkout' component={CheckoutPage} />
-        <Route exact path='/signin' render={() => currentUser ? (<Redirect to ='/'/>) : (<SignInAndSignUpPage />)} />
-      </Switch>
+      <GlobalStyle />
+        <Header />
+        <Switch>
+          <ErrorBoundary>
+            <Suspense fallback={<Spinner/>}>
+              <Route exact path='/' component={HomePage} />
+              <Route path='/shop' component={ShopPage} />
+              <Route exact path='/checkout' component={CheckoutPage} />
+              <Route exact path='/signin' render={() => currentUser ? (<Redirect to ='/'/>) : (<SignInAndSignUpPage />)} />
+            </Suspense>
+          </ErrorBoundary>
+        </Switch>
     </div>
   );
 //  }
