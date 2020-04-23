@@ -3,6 +3,10 @@ const cors = require('cors');
 const bodyParse = require('body-parser');
 const path = require('path');
 // path no hace falta importar ni incluir en las dependencias, es nativa de node.js
+
+//añadimos compression para que pueda trabajar con archivos comprimidos gzip heroku, se lo añadimos a node.js
+
+const compression = require('compression');
 //este if es para mantener la clave de Stripe guardada en .env oculta, si está en versión de producción
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
@@ -14,7 +18,8 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 // si existe port, definido por heroku cuanto se postea la aplicación, lo pondrá heroku, sino, cuanto estamos en localhost, el PORT será 5000. La aplicación cliente tiene puerto 3000 y 5000 para el servidor
 const port = process.env.PORT || 5000;
-
+//en toda esta bateria de app.use incluimos también compression para que pueda comprimir usando gzip heroku
+app.use(compression());
 // cualquier request, ya te la convierte directamente en json.
 app.use(bodyParse.json());
 //cualquier caracter que se incluya en la cadena de texto del url, te eliminar y limpia de espacios y caracteres no permitidos con simbolos.
