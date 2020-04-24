@@ -26,7 +26,7 @@ app.use(bodyParse.json());
 app.use(bodyParse.urlencoded({ extended: true }));
 //cliente tiene puerto 3000, backend 5000, como origen y backend es diferente, habría un error CORS, cors te permite poder trabajar con diferentes puertos de origenes de datos
 app.use(cors());
-app.use(compression());
+app.use(compression);
 app.use(enforce.HTTPS({trustProtoHeader:true}));
 
 //si la aplicación está en modo production, vamos a servir todos archivos estaticos que hay en /client/build, que es donde se guardaran todos los archivos react, cuando se haga el build.
