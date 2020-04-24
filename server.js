@@ -26,13 +26,12 @@ app.use(bodyParse.json());
 app.use(bodyParse.urlencoded({ extended: true }));
 //cliente tiene puerto 3000, backend 5000, como origen y backend es diferente, habría un error CORS, cors te permite poder trabajar con diferentes puertos de origenes de datos
 app.use(cors());
-
+app.use(compression());
+app.use(enforce.HTTPS({trustProtoHeader:true}));
 
 //si la aplicación está en modo production, vamos a servir todos archivos estaticos que hay en /client/build, que es donde se guardaran todos los archivos react, cuando se haga el build.
 if(process.env.NODE_ENV === 'production') {
 //enforce, que ha sido immportado de express-sslify te permite convertir cualquier request http a https
-  app.use(compression());
-  app.use(enforce.HTTPS({trustProtoHeader:true}));
   app.use(express.static(path.join(__dirname, 'client/build')));
 //para cualquier url que el cliente consulta '*' existirá un request, y una respuesta.
   app.get('*',function(req,res){
