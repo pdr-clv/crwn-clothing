@@ -8,7 +8,8 @@ import { BrowserRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate} from 'redux-persist/integration/react';
 // envolveremos el componente App con PersistGate para que pueda ser persistente el state.
-
+//importamos todo del archivo serviceWorker, que existe en raiz, es el archivo que tendrá el serviceWorker para hacer nuestra aplicación PWA
+import * as serviceWorker from './serviceWorker';
 // forma primitiva , ahora hay que importar store and persitstore
 //import store from './redux/store';
 
@@ -31,4 +32,5 @@ ReactDOM.render(
 		</BrowserRouter>
 	</Provider>
 	, document.getElementById('root'));
-
+//con este script que hemos importado del archivo serviceWorker, hacemos nuestra aplicación PWA
+serviceWorker.register();

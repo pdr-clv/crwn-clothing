@@ -1,15 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParse = require('body-parser');
-const path = require('path');
+const path = require('path'); 
 // path no hace falta importar ni incluir en las dependencias, es nativa de node.js
+//con enforce, heroku cambiará cualquier request http a https, que es el encargado de encriptar los request.
+const enforce = requite('express-sslify');
 
+//este if es para mantener la clave de Stripe guardada en .env oculta, si está en versión de producción
+if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 //añadimos compression para que pueda trabajar con archivos comprimidos gzip heroku, se lo añadimos a node.js
 
 const compression = require('compression');
-//este if es para mantener la clave de Stripe guardada en .env oculta, si está en versión de producción
-if (process.env.NODE_ENV !== 'production') require('dotenv').config();
-
 //vamos a importar la libreria stripe, es una importación un poco especial, necesita el parametro SecretKey. lo hacemos después de definir si está en production o no, para poder acceder a la Secret Key
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -19,7 +20,6 @@ const app = express();
 // si existe port, definido por heroku cuanto se postea la aplicación, lo pondrá heroku, sino, cuanto estamos en localhost, el PORT será 5000. La aplicación cliente tiene puerto 3000 y 5000 para el servidor
 const port = process.env.PORT || 5000;
 //en toda esta bateria de app.use incluimos también compression para que pueda comprimir usando gzip heroku
-app.use(compression());
 // cualquier request, ya te la convierte directamente en json.
 app.use(bodyParse.json());
 //cualquier caracter que se incluya en la cadena de texto del url, te eliminar y limpia de espacios y caracteres no permitidos con simbolos.
@@ -27,8 +27,12 @@ app.use(bodyParse.urlencoded({ extended: true }));
 //cliente tiene puerto 3000, backend 5000, como origen y backend es diferente, habría un error CORS, cors te permite poder trabajar con diferentes puertos de origenes de datos
 app.use(cors());
 
+
 //si la aplicación está en modo production, vamos a servir todos archivos estaticos que hay en /client/build, que es donde se guardaran todos los archivos react, cuando se haga el build.
 if(process.env.NODE_ENV === 'production') {
+//enforce, que ha sido immportado de express-sslify te permite convertir cualquier request http a https
+  app.use(enforce.HTTPS({trustProtoHeader:true}));
+  app.use(compression());
   app.use(express.static(path.join(__dirname, 'client/build')));
 //para cualquier url que el cliente consulta '*' existirá un request, y una respuesta.
   app.get('*',function(req,res){
@@ -40,6 +44,10 @@ if(process.env.NODE_ENV === 'production') {
 app.listen(port,err => {
   if (err) throw err;
   console.log('Server running on port ' + port);
+});
+
+app.get('/service-worker.js',(req,res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'build', 'service-worker.js'));
 });
 
 // generamos una ruta, para registrar el pago. Desde el cliente, se hará una solicitud a backend a esta ruta, y esta ruta hará un post a cliente.
