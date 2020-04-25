@@ -5,12 +5,14 @@ const path = require('path');
 // path no hace falta importar ni incluir en las dependencias, es nativa de node.js
 //con enforce, heroku cambiará cualquier request http a https, que es el encargado de encriptar los request.
 const enforce = requite('express-sslify');
+//añadimos compression para que pueda trabajar con archivos comprimidos gzip heroku, se lo añadimos a node.js
+const compression = require('compression');
 
 //este if es para mantener la clave de Stripe guardada en .env oculta, si está en versión de producción
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
-//añadimos compression para que pueda trabajar con archivos comprimidos gzip heroku, se lo añadimos a node.js
 
-const compression = require('compression');
+
+
 //vamos a importar la libreria stripe, es una importación un poco especial, necesita el parametro SecretKey. lo hacemos después de definir si está en production o no, para poder acceder a la Secret Key
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -26,12 +28,13 @@ app.use(bodyParse.json());
 app.use(bodyParse.urlencoded({ extended: true }));
 //cliente tiene puerto 3000, backend 5000, como origen y backend es diferente, habría un error CORS, cors te permite poder trabajar con diferentes puertos de origenes de datos
 app.use(cors());
-app.use(compression);
-app.use(enforce.HTTPS({trustProtoHeader:true}));
+
 
 //si la aplicación está en modo production, vamos a servir todos archivos estaticos que hay en /client/build, que es donde se guardaran todos los archivos react, cuando se haga el build.
 if(process.env.NODE_ENV === 'production') {
 //enforce, que ha sido immportado de express-sslify te permite convertir cualquier request http a https
+  app.use(compression());
+  app.use(enforce.HTTPS({trustProtoHeader:true}));
   app.use(express.static(path.join(__dirname, 'client/build')));
 //para cualquier url que el cliente consulta '*' existirá un request, y una respuesta.
   app.get('*',function(req,res){
