@@ -4,7 +4,7 @@ const bodyParse = require('body-parser');
 const path = require('path'); 
 // path no hace falta importar ni incluir en las dependencias, es nativa de node.js
 //con enforce, heroku cambiará cualquier request http a https, que es el encargado de encriptar los request.
-const enforce = requite('express-sslify');
+const enforce = require('express-sslify');
 //añadimos compression para que pueda trabajar con archivos comprimidos gzip heroku, se lo añadimos a node.js
 const compression = require('compression');
 
