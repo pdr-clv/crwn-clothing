@@ -39,6 +39,12 @@ const cartReducer = (state = INITIAL_STATE,action) => {
         ...state,
         cartItems: []
       };
+    case CartActionTypes.SET_CART_FROM_FIREBASE:
+      return {
+  // se quiere guardar en el state, en cartItems lo que hay guardado en Firebase.
+        ...state,
+        cartItems: action.payload
+      };
     default:
       return state;
   }

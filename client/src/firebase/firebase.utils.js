@@ -90,6 +90,22 @@ export const convertCollectionsSnapshotToMap = (collections) =>{
   },{});
 
 };
+//función para añadir item añadido al carrito del usuario que está logueado en Firebase
+//getUserCartRef devuelve la referencia de la colleción cart, donde se guardan los items por usuario.
+export const getUserCartRef = async userId=>{
+//primero se obtiene un snapShot de la colección carts, y se ve si existe dentro de todos sus docs, un doc que tenga userId igual al que se le pasa.
+  const cartRef=firestore.collection('carts').where('userId', '==', userId);
+  const snapShot = await cartRef.get();
+//si no existe un doc con el userId que le pasamos, crearemos un nuevo doc, que tenga userId, pero cartItems está inicializado a un array vacio.
+  if (snapShot.empty) {
+    const cartDocRef = firestore.collection('carts').doc();
+    await cartDocRef.set({userId,cartItems:[]});
+    return cartDocRef;
+  } else {
+//si existe el userId, se devolverá el docRef que tiene ese userId y su array con los cartItems añadidos.
+    return snapShot.docs[0].ref;
+  };
+};
 
 //haremos una comprobación de si existe usuario logueado al cargar la página, o al hacer refresh, para que haya persistencia de usuario logueado.
 
